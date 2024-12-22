@@ -1,0 +1,114 @@
+Copyright Stackpack 2024. All rights reserved. 
+Author: Nick Weeks 
+Origin date: 20241222
++-----------------------------------------------------------------+
+| ____    _                    _                             _    |
+|/ ___|  | |_    __ _    ___  | | __  _ __     __ _    ___  | | __|
+|\___ \  | __|  / _` |  / __| | |/ / | '_ \   / _` |  / __| | |/ /|
+| ___) | | |_  | (_| | | (__  |   <  | |_) | | (_| | | (__  |   < |
+||____/   \__|  \__,_|  \___| |_|\_\ | .__/   \__,_|  \___| |_|\_\|
+|                     ____     ___   |_|__    _  _                |
+|                    |___ \   / _ \  |___ \  | || |               |
+|                      __) | | | | |   __) | | || |_              |
+|                     / __/  | |_| |  / __/  |__   _|             |
+|                    |_____|  \___/  |_____|    |_|               |
++-----------------------------------------------------------------+
+
+
+
++-----------------------------------------------------------------+
+| ____    _                    _                             _    |
+|/ ___|  | |_    __ _    ___  | | __  _ __     __ _    ___  | | __|
+|\___ \  | __|  / _` |  / __| | |/ / | '_ \   / _` |  / __| | |/ /|
+| ___) | | |_  | (_| | | (__  |   <  | |_) | | (_| | | (__  |   < |
+||____/   \__|  \__,_|  \___| |_|\_\ | .__/   \__,_|  \___| |_|\_\|
+|                     ____     ___   |_|__    ____                |
+|                    |___ \   / _ \  |___ \  | ___|               |
+|                      __) | | | | |   __) | |___ \               |
+|                     / __/  | |_| |  / __/   ___) |              |
+|                    |_____|  \___/  |_____| |____/               |
++-----------------------------------------------------------------+
+
+
+#########
+    #
+ ####### a)- Installation overview
+    #
+    #	The goal is to install software on a Client device. In this case we are attempting to install an Ansible Server to manage our environment. 
+    #
+    #		a)-Installation overview
+    #		b)-Steps for success
+    #		c)-Checking up on it
+    #		d)-Deleting it
+    #
+    #
+  #####	a.1 The vendor instructions are located here:
+    #
+    #		https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-debian
+    #
+  #####	a.2 Third party useful videos
+    #
+    #		https://www.youtube.com/watch?v=-Q4T9wLsvOQ&list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&index=1
+    #
+    #		We are specifically using the latest Debian installation of linux. 
+    #
+ ####### b)
+    #
+  ##### b.1 Add SSH
+    #
+    #		Launch console from proxmox
+    #			
+    #				For server installs from a terminal type: 
+    #					['sudo apt install openssh-server']
+    #			
+    #       For client installs from a terminal type:
+    #					['sudo apt install 'openssh-client']
+    #
+    #		Using the account that will be doing the distributions for ansible on each machine, generate the public and private ssh keys on the ansible server that you will be using as the server. From a terminal type:
+    #					['ssh-keygen -t ed25519 -C "svc_ansibledeploy"']
+    #		
+    #   Then publish the public key to Client destination devices where you will deploy packages. From a terminal type:
+    #					['ssh-copy-id -i ./.ssh/id_ed25519.pub svc_ansibledeploy@192.168.1.20']
+    #
+  #####	b.2 Connect to github repository
+    #
+    #		Publish key to github
+    #
+  #####	b.3 Make server inventory
+    #
+    #		Create a list of all the servers we have. 
+    #
+  ##### b.4 Common Ansible Commands
+    #   Upgrade all of the packages currently distributed to the machine. 
+    #   ['ansible all -m apt -a "upgrade=dist" --become --ask-become-pass']
+    #
+    #   Install the latest version of git. 
+    #   ['ansible all -m apt -a "name=git state=latest" --become --ask-become-pass']
+    #
+  ##### b.5 Playbook file creation
+    #
+    #   Installs apache2 via a playbook called install_package.yml:
+    #
+    #---------------------------------------
+    #
+    #- hosts: all
+    #  become: true
+    #  tasks:
+    #
+    #  - name: update repository index
+    #    apt:
+    #      update_cache: yes
+    #
+    #  - name: install apache2 package
+    #    apt:
+    #      name: apache2
+    #
+    #---------------------------------------
+    #
+    #  ['ansible-playbook --ask-become-pass install_package.yml']
+    #
+    #
+    #
+  #####	b.6 Verify prod library access
+    #
+#########
