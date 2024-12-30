@@ -4,7 +4,7 @@
   become: true
   tasks:
 
-  - name: install apache2 package
+  - name: install openssh-server package
     apt:
-      name: apache2 
+      name: openssh-server
       state: absent
